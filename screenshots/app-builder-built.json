@@ -1,0 +1,40 @@
+{
+  "url": "http://127.0.0.1:8081/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "One team. Multiple specialties. Complete solutions. · Virellion",
+      "hasCanvas": false,
+      "bodyTextLen": 6192,
+      "bodyTextHash": "942e12816b9a44b8bff5a48ed4a09ab439ca98e20cac7d8c34755ea4867542b9",
+      "bodyTextPrefix": "VIRELLION Services Offers Packages Approach Start a project CREA",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "One team. Multiple specialties. Complete solutions. · Virellion",
+      "hasCanvas": false,
+      "bodyTextLen": 6142,
+      "bodyTextHash": "29cf4f9d56a409fd8adfe277f8ef3771f4ed7a24142fa2725df6496d506bf4ce",
+      "bodyTextPrefix": "VIRELLION CREATIVE · BUSINESS · TECHNOLOGY One team. Multiple sp",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": true,
+  "baselineReasons": [
+    "desktop: body text replaced (similar length, page start changed)"
+  ]
+}

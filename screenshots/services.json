@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/services",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Services · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 3871,
+      "bodyTextHash": "42a2c969493f95421278b75d3816d7b8a85bcbee794eb3f238df9f350b3a5400",
+      "bodyTextPrefix": "ATLAS Services Offers Packages Approach Desk Start a project SER",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/services.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Services · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 3816,
+      "bodyTextHash": "0f4e3a7b989046593b37a44726a572390ffe5677f7935e62c893f7083f4782d2",
+      "bodyTextPrefix": "ATLAS SERVICES The catalog, by practice. Sixteen departments. Hi",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/services-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/services.json"
+}

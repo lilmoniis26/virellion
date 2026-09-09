@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/work",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Approach · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 4586,
+      "bodyTextHash": "784399307c4a83ba644a2f51fecbf6c1c8cd72d0d30d0e50305f1ef182af82c4",
+      "bodyTextPrefix": "ATLAS Services Offers Packages Approach Desk Start a project APP",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/work.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Approach · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 4531,
+      "bodyTextHash": "9cb12cb097fac3dab047303cb772600cb5b278d5fdb0fb0719d19eb85ecfb7b4",
+      "bodyTextPrefix": "ATLAS APPROACH Inquiry to handoff, without improvising the middl",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/work-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/work.json"
+}

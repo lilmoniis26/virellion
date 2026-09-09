@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/account",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Sign in · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1102,
+      "bodyTextHash": "d909490e3ba4414feca6f5c71d5c0cfdba066563d0cb100f71c9c259ea382d25",
+      "bodyTextPrefix": "ATLAS Services Offers Packages Approach Sign in Start a project ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/account.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Sign in · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1044,
+      "bodyTextHash": "a93a1ffd5d76a52d5955080471cbd3370616e5da256ee11b7111a64f7d4299a6",
+      "bodyTextPrefix": "ATLAS CLIENT ACCESS Sign in to Atlas. Google, X, or email. Use t",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/account-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/account.json"
+}

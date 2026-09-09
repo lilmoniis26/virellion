@@ -1,0 +1,1 @@
+var e={name:`Virellion`,wordmark:`VIRELLION`,host:`virellion.online`,url:`https://virellion.online`};export{e as t};

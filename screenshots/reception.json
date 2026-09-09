@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/receptionist",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Reception · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1221,
+      "bodyTextHash": "d1a37614fc59c5f23c79b68ebd2824ac61853a70e1ea169bb29f4de2c058889c",
+      "bodyTextPrefix": "ATLAS Services Offers Packages Approach Desk Start a project FRO",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/reception.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Reception · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1166,
+      "bodyTextHash": "85dcb1aca0381debe4e7041b316c8be0e65d976e0ef91497333e4abdce39e18b",
+      "bodyTextPrefix": "ATLAS FRONT DESK Reception Describe the outcome in ordinary lang",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/reception-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/reception.json"
+}

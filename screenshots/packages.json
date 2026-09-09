@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/packages",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Packages · Virellion",
+      "hasCanvas": false,
+      "bodyTextLen": 3350,
+      "bodyTextHash": "20c4d0b5f38b354c06c616ecccba05a623d4f26e5717f8f16167e1d10fe1697f",
+      "bodyTextPrefix": "VIRELLION Services Offers Packages Approach Sign in Start a proj",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/packages.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Packages · Virellion",
+      "hasCanvas": false,
+      "bodyTextLen": 3292,
+      "bodyTextHash": "fb304c21d7411c2f0da4fe8172eff2f44faca437496e03ba0c6dae3c6c43d3db",
+      "bodyTextPrefix": "VIRELLION PACKAGES Launch with five. Keep the rest custom. Other",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/packages-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/packages.json"
+}

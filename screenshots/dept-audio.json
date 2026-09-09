@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/departments/audio",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Music and Audio · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1414,
+      "bodyTextHash": "d323e0cbfe2e14b3163c975d1fb32db4bd3f509a5d9d941485f38d88d7fca2d3",
+      "bodyTextPrefix": "ATLAS Services Offers Packages Approach Desk Start a project PRA",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/dept-audio.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Music and Audio · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1359,
+      "bodyTextHash": "39b7eac0f1875b03cc6b8e14eeb2e0146dcdd8d9b8d18f5556200e1cb533ac72",
+      "bodyTextPrefix": "ATLAS PRACTICE Music and Audio Musicians, podcasters, authors, a",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/dept-audio-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/dept-audio.json"
+}

@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/departments/publishing",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Books, Publishing, and Writing · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1856,
+      "bodyTextHash": "5b0f082bf078a58cd30f5ddfe584b15a20938963d613f38b8db7b956645686be",
+      "bodyTextPrefix": "ATLAS Services Offers Packages Approach Desk Start a project PRA",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/dept.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Books, Publishing, and Writing · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1801,
+      "bodyTextHash": "0f61131685ac351dbaa6361e98778381d85ec9f2f15895a1fa70bea86dc1ef14",
+      "bodyTextPrefix": "ATLAS PRACTICE Books, Publishing, and Writing Authors, educators",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/dept-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/dept.json"
+}

@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/offers/book-launch",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Book Development and Launch · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1983,
+      "bodyTextHash": "55d6e8682fe4e709cbc478fd0f2a602e9040c434ad102865f89bfee129464a4b",
+      "bodyTextPrefix": "ATLAS Services Offers Packages Approach Desk Start a project AUT",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/offer.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Book Development and Launch · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1928,
+      "bodyTextHash": "7c429ce62521815948892ca03056794fbca4ad706ad1edf19e5d5b1042eccd7e",
+      "bodyTextPrefix": "ATLAS AUTHOR PROGRAM Book Development and Launch A finished book",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/offer-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/offer.json"
+}

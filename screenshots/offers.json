@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/offers",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Offers · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1953,
+      "bodyTextHash": "69008ece95f70beb1852404c7caab3db11587959521b7cced2b6a36e91e82737",
+      "bodyTextPrefix": "ATLAS Services Offers Packages Approach Desk Start a project OFF",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/offers.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Offers · Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1898,
+      "bodyTextHash": "0c4ba4d90114be9c2a0007a394ad144ae05a759653f7268e46fe054f5883329a",
+      "bodyTextPrefix": "ATLAS OFFERS Three public offers. A fifth of the catalog, on pur",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/offers-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/offers.json"
+}

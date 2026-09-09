@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/hq",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1548,
+      "bodyTextHash": "e35168aefc77e2cc308e73a38a8012d307a4e3b16ae071c12a7a2851a47c0777",
+      "bodyTextPrefix": "ATLAS Departments Offers Packages How we work Reception HQ Start",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/hq.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Atlas",
+      "hasCanvas": false,
+      "bodyTextLen": 1393,
+      "bodyTextHash": "3ea30ceae29666eb45ddc81de52e9b787426ee0bb7f4b35f1e5f6c44ebd0fac4",
+      "bodyTextPrefix": "ATLAS Overview Inquiries Projects Assistants Quality Demo HQ Ope",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/hq-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/hq.json"
+}

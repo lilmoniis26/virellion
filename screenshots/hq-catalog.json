@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/hq/catalog",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Virellion",
+      "hasCanvas": false,
+      "bodyTextLen": 871,
+      "bodyTextHash": "91ca9235fde01fd9f33600b65b9a039d092f0e55e2b97470c3769ddc019d171f",
+      "bodyTextPrefix": "VIRELLION Services Offers Packages Approach Sign in Start a proj",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/hq-catalog.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Sign in · Virellion",
+      "hasCanvas": false,
+      "bodyTextLen": 1318,
+      "bodyTextHash": "cf711f6ccb5dff8a8aa8d599af789422604a40e17da34acff9a955df91324291",
+      "bodyTextPrefix": "VIRELLION CLIENT ACCESS Sign in to Virellion. Google, X, or emai",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/hq-catalog-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/hq-catalog.json"
+}

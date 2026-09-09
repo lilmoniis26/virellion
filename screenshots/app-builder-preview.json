@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "One team. Multiple specialties. Complete solutions. · Virellion",
+      "hasCanvas": false,
+      "bodyTextLen": 6200,
+      "bodyTextHash": "c5f0ad7254dd70de1c3254046f146a964daf9aa9e18a38b9905adb958056e01d",
+      "bodyTextPrefix": "VIRELLION Services Offers Packages Approach Sign in Start a proj",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "One team. Multiple specialties. Complete solutions. · Virellion",
+      "hasCanvas": false,
+      "bodyTextLen": 6142,
+      "bodyTextHash": "29cf4f9d56a409fd8adfe277f8ef3771f4ed7a24142fa2725df6496d506bf4ce",
+      "bodyTextPrefix": "VIRELLION CREATIVE · BUSINESS · TECHNOLOGY One team. Multiple sp",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

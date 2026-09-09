@@ -1,0 +1,1 @@
+import{t as e}from"./site-CzyxxBMt.js";function t(t,n){return{meta:[{title:`${t} · ${e.name}`},{name:`description`,content:n}]}}export{t};
