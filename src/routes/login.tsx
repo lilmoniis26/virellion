@@ -1,41 +1,59 @@
-import { useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import { signUp, signIn } from '@/lib/auth-client';
 
 export function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  const navigate = useNavigate()
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setIsLoading(true)
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
 
     try {
-      // TODO: Implement actual authentication with Better Auth
-      // For now, just show a success message
-      console.log('Login attempt:', { email, password })
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Redirect to dashboard (to be created)
-      navigate({ to: '/' })
+      if (isSignUp) {
+        const result = await signUp({ email, password, name });
+        if (result.success) {
+          console.log('Sign up successful:', result.message);
+          navigate({ to: '/dashboard' });
+        } else {
+          setError(result.error || 'Sign up failed');
+        }
+      } else {
+        const result = await signIn({ email, password });
+        if (result.success) {
+          console.log('Sign in successful:', result.message);
+          navigate({ to: '/dashboard' });
+        } else {
+          setError(result.error || 'Sign in failed');
+        }
+      }
     } catch (err) {
-      setError('Login failed. Please try again.')
-      console.error('Login error:', err)
+      setError('An error occurred. Please try again.');
+      console.error('Auth error:', err);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         <div className="bg-slate-800 rounded-lg shadow-xl p-8 border border-slate-700">
-          <h2 className="text-2xl font-bold text-white mb-6">Sign In</h2>
+          <h2 className="text-2xl font-bold text-white mb-2">
+            {isSignUp ? 'Create Account' : 'Sign In'}
+          </h2>
+          <p className="text-sm text-slate-400 mb-6">
+            {isSignUp 
+              ? '✨ First user will have full admin control over the entire site' 
+              : 'Sign in to manage your site'}
+          </p>
 
           {error && (
             <div className="mb-4 p-3 bg-red-900/20 border border-red-700 rounded text-red-400 text-sm">
@@ -44,6 +62,23 @@ export function LoginPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {isSignUp && (
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
+                  Full Name
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required={isSignUp}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="John Doe"
+                />
+              </div>
+            )}
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
                 Email
@@ -72,6 +107,9 @@ export function LoginPage() {
                 className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="••••••••"
               />
+              {isSignUp && (
+                <p className="text-xs text-slate-400 mt-1">Minimum 8 characters</p>
+              )}
             </div>
 
             <button
@@ -79,18 +117,32 @@ export function LoginPage() {
               disabled={isLoading}
               className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 text-white font-semibold rounded transition"
             >
-              {isLoading ? 'Signing In...' : 'Sign In'}
+              {isLoading ? (
+                isSignUp ? 'Creating Account...' : 'Signing In...'
+              ) : (
+                isSignUp ? 'Create Account' : 'Sign In'
+              )}
             </button>
           </form>
 
           <div className="mt-6 text-center text-sm text-slate-400">
-            Don't have an account?{' '}
-            <button className="text-blue-400 hover:text-blue-300 font-semibold">
-              Sign up
+            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+            <button
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError('');
+                setName('');
+                setEmail('');
+                setPassword('');
+              }}
+              className="text-blue-400 hover:text-blue-300 font-semibold"
+            >
+              {isSignUp ? 'Sign in' : 'Sign up'}
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
