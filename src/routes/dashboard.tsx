@@ -1,26 +1,38 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { signOut } from '@/lib/auth-client';
 
 type Section = 'overview' | 'users' | 'content' | 'payments' | 'settings' | 'appearance' | 'security';
 
+type User = {
+  email: string;
+  name: string;
+};
+
 export function DashboardPage() {
   const [activeSection, setActiveSection] = useState<Section>('overview');
+  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      navigate({ to: '/' });
-    } catch (error) {
-      console.error('Sign out failed:', error);
+  useEffect(() => {
+    // Load user from localStorage
+    const userData = localStorage.getItem('user');
+    if (!userData) {
+      navigate({ to: '/login' });
+      return;
     }
+    setUser(JSON.parse(userData));
+  }, [navigate]);
+
+  const handleSignOut = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('isAdmin');
+    navigate({ to: '/' });
   };
 
   const renderSection = () => {
     switch (activeSection) {
       case 'overview':
-        return <OverviewSection />;
+        return <OverviewSection user={user} />;
       case 'users':
         return <UsersSection />;
       case 'content':
@@ -34,9 +46,13 @@ export function DashboardPage() {
       case 'security':
         return <SecuritySection />;
       default:
-        return <OverviewSection />;
+        return <OverviewSection user={user} />;
     }
   };
+
+  if (!user) {
+    return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white">Loading...</div>;
+  }
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
@@ -91,6 +107,10 @@ export function DashboardPage() {
             />
             
             <div className="pt-6 mt-6 border-t border-slate-700">
+              <div className="mb-4 px-4 py-3 bg-slate-800 rounded">
+                <p className="text-xs text-slate-400">Logged in as</p>
+                <p className="text-sm font-semibold text-white truncate">{user.email}</p>
+              </div>
               <button
                 onClick={handleSignOut}
                 className="w-full px-4 py-2 text-left text-sm text-red-400 hover:bg-red-900/20 rounded transition"
@@ -138,11 +158,11 @@ function NavItem({
   );
 }
 
-function OverviewSection() {
+function OverviewSection({ user }: { user: User | null }) {
   return (
     <div>
-      <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
-      <p className="text-slate-400 mb-8">Full control over your site configuration and content</p>
+      <h1 className="text-4xl font-bold text-white mb-2">Welcome back, {user?.name || 'Admin'}!</h1>
+      <p className="text-slate-400 mb-8">You have full control over your site configuration and content</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard title="Total Users" value="1" icon="👥" />
@@ -162,8 +182,13 @@ function OverviewSection() {
         </div>
 
         <div className="bg-slate-800 rounded-lg shadow-xl p-6 border border-slate-700">
-          <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
-          <p className="text-slate-400 text-sm">No activity yet. Start by exploring the dashboard sections.</p>
+          <h2 className="text-xl font-bold text-white mb-4">Getting Started</h2>
+          <ul className="text-slate-300 text-sm space-y-2">
+            <li>✅ Site is live and operational</li>
+            <li>✅ Admin dashboard configured</li>
+            <li>✅ Stripe payments ready</li>
+            <li>📝 Configure PayPal in payments section</li>
+          </ul>
         </div>
       </div>
     </div>
@@ -199,7 +224,7 @@ function UsersSection() {
             {users.length === 0 ? (
               <tr>
                 <td colSpan={4} className="px-6 py-8 text-center text-slate-400">
-                  No users yet. Start by adding your first team member.
+                  No additional users yet. Start by adding your first team member.
                 </td>
               </tr>
             ) : (
@@ -242,9 +267,7 @@ function ContentSection() {
 }
 
 function PaymentsSection() {
-  const [paypalConfig, setPaypalConfig] = useState({ clientId: '', secret: '' });
   const [stripeKey, setStripeKey] = useState('');
-  const [showPaypalModal, setShowPaypalModal] = useState(false);
 
   return (
     <div>
@@ -277,7 +300,6 @@ function PaymentsSection() {
             </ol>
           </div>
           <button
-            onClick={() => setShowPaypalModal(true)}
             className="w-full px-4 py-2 border border-yellow-600 text-yellow-400 hover:bg-yellow-900/20 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
             disabled
           >
