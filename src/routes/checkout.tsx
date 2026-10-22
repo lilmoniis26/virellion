@@ -113,8 +113,8 @@ function CheckoutPage() {
         <div>
           <p className="text-sm leading-relaxed text-muted">{item.summary}</p>
           <p className="mt-6 text-sm leading-relaxed text-subtle">
-            Placing the order reserves the package at the published starting price. Next you pay with PayPal, request an
-            invoice, or ask for a secure card link. Virellion never stores card numbers. Custom or regulated work is scoped
+            Placing the order reserves the package at the published starting price. Next you pay with PayPal, Stripe card payment,
+            a secure card link, or an invoice. Virellion never stores card numbers. Custom or regulated work is scoped
             after intake — not sold as a click-to-buy.
           </p>
           <EngagementNotice className="mt-8" />

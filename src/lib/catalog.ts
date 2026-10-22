@@ -571,6 +571,147 @@ export const PACKAGES: ServicePackage[] = [
 			"consulting",
 			"data"
 		]
+	},
+	{
+		id: "consult-30",
+		name: "30-Minute Insight Session",
+		kind: "launch",
+		summary: "A focused 30-minute consultation to clarify direction, answer key questions, and identify the right next step.",
+		deliverables: [
+			"Scheduled session",
+			"Prioritized questions review",
+			"Recommended next actions"
+		],
+		timeline: "Same day–3 days",
+		price: 35,
+		departments: ["consulting"]
+	},
+	{
+		id: "consult-60",
+		name: "60-Minute Consultation",
+		kind: "launch",
+		summary: "A full hour of guided discussion on strategy, launch planning, or a specific business problem.",
+		deliverables: [
+			"Scheduled session",
+			"Agenda alignment",
+			"Written follow-up notes"
+		],
+		timeline: "Same day–5 days",
+		price: 65,
+		departments: ["consulting"]
+	},
+	{
+		id: "strategy-session",
+		name: "Strategy Session",
+		kind: "launch",
+		summary: "Structured strategy conversation covering positioning, priorities, and a practical action sequence.",
+		deliverables: [
+			"Strategy discussion",
+			"Priority map",
+			"Action sequence"
+		],
+		timeline: "2–7 days",
+		price: 95,
+		departments: ["consulting"]
+	},
+	{
+		id: "idea-review",
+		name: "Business Idea Review",
+		kind: "launch",
+		summary: "Independent review of a business idea with feedback on clarity, audience fit, and next validation steps.",
+		deliverables: [
+			"Idea assessment",
+			"Audience and offer notes",
+			"Validation recommendations"
+		],
+		timeline: "2–5 days",
+		price: 50,
+		departments: ["consulting"]
+	},
+	{
+		id: "plan-outline",
+		name: "Business-Plan Outline",
+		kind: "launch",
+		summary: "A structured outline covering concept, customers, channels, and startup requirements — not a formal financial projection.",
+		deliverables: [
+			"Business-plan outline",
+			"Section guidance",
+			"Resource checklist"
+		],
+		timeline: "3–7 days",
+		price: 149,
+		departments: ["consulting"]
+	},
+	{
+		id: "startup-package",
+		name: "Startup Package",
+		kind: "launch",
+		summary: "Entry-level startup support combining idea review, naming notes, and a practical launch checklist.",
+		deliverables: [
+			"Idea review",
+			"Naming notes",
+			"Launch checklist",
+			"Recommended packages"
+		],
+		timeline: "5–10 days",
+		price: 249,
+		departments: ["consulting", "formation"]
+	},
+	{
+		id: "strategy-package",
+		name: "Strategy Package",
+		kind: "launch",
+		summary: "Deeper strategy work covering positioning, offer structure, and a 90-day priority plan.",
+		deliverables: [
+			"Positioning notes",
+			"Offer structure",
+			"90-day priority plan"
+		],
+		timeline: "1–2 weeks",
+		price: 349,
+		departments: ["consulting", "marketing"]
+	},
+	{
+		id: "resume-pro",
+		name: "Professional Resume",
+		kind: "launch",
+		summary: "A clear, professional resume tailored to the client’s target roles.",
+		deliverables: [
+			"Resume draft",
+			"One revision round",
+			"Export-ready files"
+		],
+		timeline: "3–7 days",
+		price: 149,
+		departments: ["career"]
+	},
+	{
+		id: "logo-starter",
+		name: "Logo and Basic Identity Set",
+		kind: "launch",
+		summary: "A clean logo and basic identity files ready for web and print use.",
+		deliverables: [
+			"Logo concepts",
+			"Final mark",
+			"Basic usage files"
+		],
+		timeline: "5–10 days",
+		price: 299,
+		departments: ["creative"]
+	},
+	{
+		id: "book-cover",
+		name: "Book Cover (Ebook and Print Wrap)",
+		kind: "launch",
+		summary: "Professional book cover design for ebook and print formats.",
+		deliverables: [
+			"Cover concepts",
+			"Final ebook cover",
+			"Print wrap files"
+		],
+		timeline: "5–12 days",
+		price: 249,
+		departments: ["publishing", "creative"]
 	}
 ];
 export const ENGAGEMENTS: { id: EngagementType; label: string; bestFor: string; examples: string }[] = [

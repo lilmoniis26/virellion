@@ -619,7 +619,7 @@ export const submitPayment = createServerFn({ method: "POST" })
   .validator(
     z.object({
       orderId: z.string().min(1),
-      method: z.enum(["paypal", "card_link", "invoice"]),
+      method: z.enum(["paypal", "stripe", "card_link", "invoice"]),
     }),
   )
   .handler(async ({ context, data }) => {
@@ -638,7 +638,7 @@ export const submitPayment = createServerFn({ method: "POST" })
     `;
     if (!rows[0]) throw new Error("Order not found.");
     const order = mapOrder(rows[0]);
-    const methodLabel = data.method === "paypal" ? "PayPal" : data.method === "invoice" ? "invoice" : "card link";
+    const methodLabel = data.method === "paypal" ? "PayPal" : data.method === "stripe" ? "Stripe card" : data.method === "invoice" ? "invoice" : "card link";
     await notify({
       kind: "payment_submitted",
       title: data.method === "paypal" ? "PayPal payment submitted" : "Payment method chosen",

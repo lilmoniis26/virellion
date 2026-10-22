@@ -1,27 +1,31 @@
-// PayPal Configuration File
-// ================================
-// IMPORTANT: Add your PayPal credentials here to enable PayPal payments
-//
-// Steps to get your PayPal credentials:
-// 1. Go to https://developer.paypal.com/
-// 2. Log in or create an account
-// 3. Navigate to Apps & Credentials
-// 4. Create a new app or use existing
-// 5. Copy your Client ID and Secret
-// 6. Paste them below
-//
-// DO NOT commit your actual credentials to version control!
-// Use environment variables in production: process.env.PAYPAL_CLIENT_ID
+// Payment configuration for Virellion
+// Credentials come from environment variables only — never hardcode secrets.
 
 export const PAYPAL_CONFIG = {
-  // TODO: Add your PayPal credentials here
-  clientId: process.env.PAYPAL_CLIENT_ID || 'YOUR_PAYPAL_CLIENT_ID_HERE',
-  secret: process.env.PAYPAL_SECRET || 'YOUR_PAYPAL_SECRET_HERE',
-  mode: 'sandbox', // Change to 'live' for production
-  enabled: false, // Set to true when credentials are added
+  clientId: process.env.PAYPAL_CLIENT_ID || "",
+  secret: process.env.PAYPAL_SECRET || "",
+  mode: (process.env.PAYPAL_MODE as "sandbox" | "live") || "sandbox",
+  enabled: Boolean(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_SECRET),
 };
 
-// Once configured, uncomment the PayPal provider in:
-// src/lib/auth.server.ts (around line 30)
-// And update the dashboard payment section in:
-// src/routes/dashboard.tsx (around line 250)
+export const STRIPE_CONFIG = {
+  publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || process.env.VITE_STRIPE_PUBLISHABLE_KEY || "",
+  secretKey: process.env.STRIPE_SECRET_KEY || "",
+  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || "",
+  accountId: process.env.STRIPE_ACCOUNT_ID || "",
+  mode: (process.env.STRIPE_MODE as "test" | "live") || "test",
+  enabled: Boolean(process.env.STRIPE_SECRET_KEY),
+};
+
+export const PAYMENT_METHODS = {
+  paypal: PAYPAL_CONFIG.enabled,
+  stripe: STRIPE_CONFIG.enabled,
+  invoice: true,
+} as const;
+
+export const PAYMENT_METHOD_LABEL: Record<string, string> = {
+  paypal: "PayPal",
+  stripe: "Card (Stripe)",
+  invoice: "Invoice",
+  card_link: "Secure card link",
+};
