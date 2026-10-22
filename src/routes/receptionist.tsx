@@ -83,18 +83,45 @@ function ReceptionPageInner() {
     };
     const next = [...(stored.length ? stored : [OPENING]), userMsg];
     setReception(next);
-    const extracted = extractFromUtterance(intake, text);
+
+    // Always merge signed-in profile first so we never re-ask account fields
+    const base: IntakeRecord = {
+      ...intake,
+      name: intake.name || user?.displayName || "",
+      email: intake.email || user?.primaryEmail || "",
+    };
+    const extracted = extractFromUtterance(base, text, next);
     setIntake(extracted);
 
     setBusy(true);
     try {
+      // Deterministic next step when profile/intake still needs fields — avoids AI loops
+      const guided = localReception(extracted, text);
+      const needsGuided = missingIntakeFields(extracted).length > 0;
+
+      if (needsGuided) {
+        setReception([
+          ...next,
+          {
+            id: uid("msg"),
+            role: "assistant",
+            content: guided,
+            createdAt: new Date().toISOString(),
+          },
+        ]);
+        return;
+      }
+
       const profileBits = [
-        user?.displayName ? `Signed-in name: ${user.displayName}` : "",
-        user?.primaryEmail ? `Signed-in email: ${user.primaryEmail}` : "",
-        user ? "Client is authenticated — do not ask them to re-enter name or email." : "Visitor is not signed in.",
+        extracted.name ? `Client name: ${extracted.name}` : "",
+        extracted.email ? `Client email: ${extracted.email}` : "",
+        extracted.location ? `Location: ${extracted.location}` : "",
+        user ? "Authenticated client — never ask for name or email again." : "",
+        "Do not ask for any field already listed above.",
       ]
         .filter(Boolean)
         .join("\n");
+
       const result = await receptionReply({
         data: {
           messages: next
@@ -103,28 +130,23 @@ function ReceptionPageInner() {
           extracted: [profileBits, summarizeIntake(extracted)].filter(Boolean).join("\n"),
         },
       });
-      if (!result.ok) {
-        const fallback = localReception(extracted, text);
-        setReception([
-          ...next,
-          {
-            id: uid("msg"),
-            role: "assistant",
-            content: fallback,
-            createdAt: new Date().toISOString(),
-          },
-        ]);
-        if (result.error !== "AI is not available in this environment") setError(result.error);
-      } else {
-        setReception([
-          ...next,
-          {
-            id: uid("msg"),
-            role: "assistant",
-            content: result.text,
-            createdAt: new Date().toISOString(),
-          },
-        ]);
+
+      let reply = !result.ok ? guided : (result.text || guided);
+      // Block AI from re-asking known identity fields
+      if (extracted.name && /what(?:'s| is) your name|where is this project based/i.test(reply)) {
+        reply = guided;
+      }
+      setReception([
+        ...next,
+        {
+          id: uid("msg"),
+          role: "assistant",
+          content: reply,
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+      if (!result.ok && result.error !== "AI is not available in this environment") {
+        setError(result.error);
       }
     } catch {
       setReception([
@@ -139,6 +161,16 @@ function ReceptionPageInner() {
     } finally {
       setBusy(false);
     }
+  };
+
+  const resetConversation = () => {
+    setReception([]);
+    setIntake({
+      ...emptyIntake(),
+      name: user?.displayName || "",
+      email: user?.primaryEmail || "",
+    });
+    setError("");
   };
 
   const fileRecord = async () => {
@@ -195,14 +227,14 @@ function ReceptionPageInner() {
             <h1 className="mt-3 font-display text-4xl text-fg sm:text-5xl">{copy.receptionist.title}</h1>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-accent">{copy.receptionist.dek}</p>
           </div>
-          <Button
-            variant="outline"
-            className="hidden shrink-0 sm:inline-flex"
-            onClick={fileRecord}
-            disabled={messages.length < 2 || !terms}
-          >
-            Send to the studio
-          </Button>
+          <div className="hidden shrink-0 gap-2 sm:flex">
+            <Button variant="ghost" onClick={resetConversation}>
+              Start over
+            </Button>
+            <Button variant="outline" onClick={fileRecord} disabled={messages.length < 2 || !terms}>
+              Send to the studio
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -286,30 +318,68 @@ function summarizeIntake(i: IntakeRecord): string {
     .join("\n");
 }
 
-function extractFromUtterance(current: IntakeRecord, text: string): IntakeRecord {
+function missingIntakeFields(intake: IntakeRecord): string[] {
+  const missing: string[] = [];
+  if (!intake.name?.trim()) missing.push("name");
+  if (!intake.location?.trim()) missing.push("location");
+  const outcome = (intake.desiredOutcome || "").toLowerCase();
+  const isCommerce =
+    /shopify|store|reseller|marketplace|amazon|tiktok|e-?commerce|sell/.test(outcome) ||
+    intake.services.some((s) => /reseller|marketplace|shopify/i.test(s));
+  const isFormation =
+    /formation|llc|ein|start a business|from scratch|business/.test(outcome) ||
+    intake.services.some((s) => /formation/i.test(s));
+  if (isCommerce && !intake.productCategory?.trim()) missing.push("productCategory");
+  if ((isFormation || isCommerce) && !intake.businessStatus?.trim()) missing.push("businessStatus");
+  if (!intake.budget?.trim()) missing.push("budget");
+  return missing;
+}
+
+function extractFromUtterance(
+  current: IntakeRecord,
+  text: string,
+  history: ChatMessage[] = [],
+): IntakeRecord {
   const next = { ...current };
   const raw = text.trim();
+  const lower = raw.toLowerCase();
+
   const email = raw.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
   if (email) next.email = email[0];
   const phone = raw.match(/\+?1?\s*\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/);
   if (phone) next.phone = phone[0];
 
-  // Name patterns: "I'm Rosa", "Rosa and in San Antonio", "name is Rosa Hernandez"
-  if (!next.name) {
+  // Case-insensitive name extraction
+  if (!next.name?.trim()) {
     const nameMatch =
-      raw.match(/\b(?:i(?:'m| am)|my name is|this is)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/i) ||
-      raw.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s+(?:and|,|in|from)\b/) ||
-      raw.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)$/);
-    if (nameMatch?.[1] && nameMatch[1].length < 40) next.name = nameMatch[1].trim();
+      raw.match(/\b(?:i(?:'m| am)|my name is|this is|name is)\s+([A-Za-z][A-Za-z' -]{1,40})/i) ||
+      raw.match(/^([A-Za-z][A-Za-z']+)(?:\s+[A-Za-z][A-Za-z']+)?\s+(?:and|,|in|from)\b/i) ||
+      raw.match(/^([A-Za-z][A-Za-z' ]{1,40})$/);
+    if (nameMatch?.[1]) {
+      const candidate = nameMatch[1].trim();
+      if (candidate.length >= 2 && candidate.length < 50 && !/^(yes|no|ok|okay|hi|hello)$/i.test(candidate)) {
+        next.name = candidate.replace(/\b\w/g, (c) => c.toUpperCase());
+      }
+    }
+    // If last assistant asked for name and user replied with a short phrase, use it
+    const lastAsst = [...history].reverse().find((m) => m.role === "assistant")?.content || "";
+    if (!next.name?.trim() && /your name/i.test(lastAsst) && raw.split(/\s+/).length <= 6) {
+      const cleaned = raw.replace(/\b(and|&|in|from|based)\b.*$/i, "").trim();
+      if (cleaned.length >= 2) next.name = cleaned.replace(/\b\w/g, (c) => c.toUpperCase());
+    }
   }
 
-  // Location: "in San Antonio", "based in Texas", "San Antonio, Texas"
-  if (!next.location) {
+  if (!next.location?.trim()) {
     const loc =
       raw.match(/\b(?:in|from|based in|located in)\s+([A-Za-z .,]{2,60})$/i) ||
-      raw.match(/\b([A-Z][a-zA-Z .]+,\s*[A-Z]{2})\b/) ||
-      raw.match(/\b(San Antonio(?:[,\s]+Texas)?)\b/i);
+      raw.match(/\b([A-Za-z][A-Za-z .]+,\s*[A-Z]{2})\b/) ||
+      raw.match(/\b(san antonio(?:[,\s]+texas)?)\b/i) ||
+      raw.match(/\b([A-Za-z .]+,\s*texas)\b/i);
     if (loc?.[1]) next.location = loc[1].replace(/\s+/g, " ").trim();
+    const lastAsst = [...history].reverse().find((m) => m.role === "assistant")?.content || "";
+    if (!next.location?.trim() && /city|state|based|location|where/i.test(lastAsst) && raw.length < 80) {
+      if (!/^(yes|no|ok|okay)$/i.test(raw)) next.location = raw;
+    }
   }
 
   if (!next.desiredOutcome) next.desiredOutcome = raw;
@@ -324,7 +394,6 @@ function extractFromUtterance(current: IntakeRecord, text: string): IntakeRecord
   if (/automat|system|ops|agent|chatbot/i.test(raw) && !next.services.includes("AI / automation")) {
     next.services = [...next.services, "AI / automation"];
   }
-  // Only tag publishing when the user clearly wants a book — not when "from scratch" appears
   if (/\b(book|manuscript|ghostwrit|publish(?:ing)? a book)\b/i.test(raw) && !next.services.includes("Book / publishing")) {
     next.services = [...next.services, "Book / publishing"];
   }
@@ -334,8 +403,23 @@ function extractFromUtterance(current: IntakeRecord, text: string): IntakeRecord
   if (/website|landing page|web design/i.test(raw) && !next.services.includes("Website")) {
     next.services = [...next.services, "Website"];
   }
-  if (/\$\s?\d|budget|afford|cheap|under \d/i.test(raw) && !next.budget) {
+
+  // Capture product / status / budget from answers to prior questions
+  const lastAsst = [...history].reverse().find((m) => m.role === "assistant")?.content || "";
+  if (/product|sell|supplier|inventory/i.test(lastAsst) && !next.productCategory) {
+    next.productCategory = raw.slice(0, 120);
+  }
+  if (/business so far|idea only|name chosen|filed/i.test(lastAsst) && !next.businessStatus) {
+    next.businessStatus = raw.slice(0, 120);
+  }
+  if (/budget|timeline|deadline/i.test(lastAsst) && !next.budget) {
     next.budget = raw.slice(0, 80);
+  }
+  if (/\$\s?\d|budget|afford|under \d/i.test(raw) && !next.budget) {
+    next.budget = raw.slice(0, 80);
+  }
+  if (/shopify|amazon|tiktok shop/i.test(raw) && !next.marketplace) {
+    next.marketplace = raw.slice(0, 80);
   }
   return next;
 }
@@ -349,35 +433,34 @@ function localReception(intake: IntakeRecord, text: string): string {
   const isFormation =
     /formation|llc|ein|start a business|from scratch|business/.test(outcome) ||
     intake.services.some((s) => /formation/i.test(s));
+  const first = (intake.name || "there").split(/\s+/)[0];
 
-  // Never re-ask fields we already have
-  if (!intake.name) {
+  if (!intake.name?.trim()) {
     return "Got it. What name should we put on this project, and which city are you working from?";
   }
-  if (!intake.location) {
-    return `Thanks, ${intake.name.split(" ")[0]}. Which city or state is this project based in?`;
+  if (!intake.location?.trim()) {
+    return `Thanks, ${first}. Which city or state is this project based in?`;
   }
-  if (isCommerce && !intake.marketplace && !/shopify|amazon|tiktok/i.test(intake.desiredOutcome)) {
-    return `Thanks, ${intake.name.split(" ")[0]}. For the store, are you planning Shopify only, or also a marketplace like Amazon or TikTok Shop?`;
+  if (isCommerce && !intake.marketplace?.trim() && !/shopify|amazon|tiktok/i.test(intake.desiredOutcome || "")) {
+    return `Thanks, ${first}. For the store — Shopify only, or also Amazon or TikTok Shop?`;
   }
-  if (isCommerce && !intake.productCategory) {
-    return "What kind of products will you sell, and do you already have suppliers or inventory?";
+  if (isCommerce && !intake.productCategory?.trim()) {
+    return `Thanks, ${first}. What kind of products will you sell, and do you already have suppliers or inventory?`;
   }
-  if ((isFormation || isCommerce) && !intake.businessStatus) {
+  if ((isFormation || isCommerce) && !intake.businessStatus?.trim()) {
     return "Where are you with the business so far — idea only, name chosen, or already filed anything?";
   }
-  if (!intake.budget) {
+  if (!intake.budget?.trim()) {
     return "Do you have a rough budget range and a timeline in mind? Even a ballpark helps us match the right package.";
   }
 
-  // Route recommendation from catalog
   let recommend = "";
   if (isFormation && isCommerce) {
     recommend =
-      "The closest fit is our Business Formation and Online-Reseller Readiness path (from $2,400) or the Online Reseller and Marketplace Launch package ($2,900). We can also start with the Business Setup Roadmap ($490) if you want a sequenced plan first.";
+      "The closest fit is Business Formation and Online-Reseller Readiness (from $2,400) or Online Reseller and Marketplace Launch ($2,900). The Business Setup Roadmap ($490) works if you want a plan first.";
   } else if (isCommerce) {
     recommend =
-      "For a Shopify-first launch, Online Reseller and Marketplace Launch ($2,900) or Brand and Website Launch ($1,800) are the usual fits. Monthly support is $890/mo if you want us on ongoing ops.";
+      "For a Shopify-first launch, Online Reseller and Marketplace Launch ($2,900) or Brand and Website Launch ($1,800) are the usual fits. Monthly support is $890/mo if you want ongoing ops.";
   } else if (isFormation) {
     recommend =
       "For formation work, Formation and Administrative Coordination ($1,450) or the Business Setup Roadmap ($490) are the usual starting points.";
@@ -389,5 +472,5 @@ function localReception(intake: IntakeRecord, text: string): string {
 
 ${recommend}
 
-If that matches what you want, check the terms on the right and tap Send to the studio so we can file an inquiry and prepare a scope. Or tell me what to adjust — product type, budget, timeline, or how hands-off you need the setup to be.`;
+If that matches, check the terms on the right and tap Send to the studio so we can file an inquiry. Or tell me what to adjust — products, budget, timeline, or how hands-off you need the setup.`;
 }
