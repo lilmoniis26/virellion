@@ -375,11 +375,12 @@ export function mergeSiteCopy(raw: unknown): SiteCopy {
     contact: {
       email: typeof saved.contact?.email === "string" ? saved.contact.email : d.contact.email,
       phone: typeof saved.contact?.phone === "string" ? saved.contact.phone : d.contact.phone,
-      addressLine: str(saved.contact?.addressLine, d.contact.addressLine),
+      // Always prefer current SITE.host so domain renames are not stuck in CMS payload
+      addressLine: SITE.host,
     },
     footer: {
       blurb: str(saved.footer?.blurb, d.footer.blurb),
-      legalLine: str(saved.footer?.legalLine, d.footer.legalLine),
+      legalLine: d.footer.legalLine,
     },
     cta: {
       title: str(saved.cta?.title, d.cta.title),
