@@ -42,7 +42,10 @@ export function classifyIntake(intake: Partial<IntakeRecord>, extraText = ""): R
   if (/cover|logo|brand|identity|packaging|graphic|style guide/.test(t) || services.some((s) => s.includes("brand"))) {
     addDept(depts, "creative");
   }
-  if (/book|manuscript|ghostwrit|edit|publish|blurb|chapter/.test(t) || services.some((s) => s.includes("book"))) {
+  if (
+    /\b(book|manuscript|ghostwrit(?:ing)?|blurb|chapter)\b|publish(?:ing)? a book|book cover|book launch/.test(t) ||
+    services.some((s) => s.includes("book"))
+  ) {
     addDept(depts, "publishing");
   }
   if (/video|trailer|film|animation|reel|cinematic/.test(t) || services.some((s) => s.includes("video"))) {
@@ -162,8 +165,11 @@ function inferPackage(depts: DepartmentId[], engagement: EngagementType, t: stri
 }
 
 function inferOffer(depts: DepartmentId[], t: string): string | undefined {
-  if (depts.includes("publishing") || /book/.test(t)) return "book-launch";
+  // Commerce / formation first so Shopify + "from scratch" never routes to books
   if (depts.includes("formation") || depts.includes("ecommerce")) return "formation-reseller";
+  if (depts.includes("publishing") || /\b(book|manuscript|ghostwrit|publish(?:ing)? a book)\b/.test(t)) {
+    return "book-launch";
+  }
   if (depts.includes("creative") || depts.includes("web")) return "brand-website";
   return undefined;
 }

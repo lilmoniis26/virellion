@@ -50,8 +50,21 @@ function ReceptionPageInner() {
   const [terms, setTerms] = useState(false);
   const [marketing, setMarketing] = useState(false);
   const scroller = useRef<HTMLDivElement>(null);
+  const profileSeeded = useRef(false);
 
   const messages = stored.length ? stored : [OPENING];
+
+  // Prefill intake from signed-in account so reception never re-asks name/email
+  useEffect(() => {
+    if (!user || profileSeeded.current) return;
+    profileSeeded.current = true;
+    setIntake({
+      ...intake,
+      name: intake.name || user.displayName || "",
+      email: intake.email || user.primaryEmail || "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- seed once when session loads
+  }, [user]);
 
   useEffect(() => {
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: "smooth" });
@@ -75,12 +88,19 @@ function ReceptionPageInner() {
 
     setBusy(true);
     try {
+      const profileBits = [
+        user?.displayName ? `Signed-in name: ${user.displayName}` : "",
+        user?.primaryEmail ? `Signed-in email: ${user.primaryEmail}` : "",
+        user ? "Client is authenticated — do not ask them to re-enter name or email." : "Visitor is not signed in.",
+      ]
+        .filter(Boolean)
+        .join("\n");
       const result = await receptionReply({
         data: {
           messages: next
             .filter((m) => m.role !== "system")
             .map((m) => ({ role: m.role as "user" | "assistant", content: m.content })),
-          extracted: summarizeIntake(extracted),
+          extracted: [profileBits, summarizeIntake(extracted)].filter(Boolean).join("\n"),
         },
       });
       if (!result.ok) {
@@ -268,36 +288,106 @@ function summarizeIntake(i: IntakeRecord): string {
 
 function extractFromUtterance(current: IntakeRecord, text: string): IntakeRecord {
   const next = { ...current };
-  const email = text.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
+  const raw = text.trim();
+  const email = raw.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
   if (email) next.email = email[0];
-  const phone = text.match(/\+?1?\s*\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/);
+  const phone = raw.match(/\+?1?\s*\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/);
   if (phone) next.phone = phone[0];
-  if (!next.desiredOutcome) next.desiredOutcome = text;
-  else next.desiredOutcome = `${next.desiredOutcome}\n${text}`;
-  if (/llc|ein|formation/i.test(text) && !next.services.includes("Business formation")) {
+
+  // Name patterns: "I'm Rosa", "Rosa and in San Antonio", "name is Rosa Hernandez"
+  if (!next.name) {
+    const nameMatch =
+      raw.match(/\b(?:i(?:'m| am)|my name is|this is)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)/i) ||
+      raw.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)\s+(?:and|,|in|from)\b/) ||
+      raw.match(/^([A-Z][a-z]+(?:\s+[A-Z][a-z]+)?)$/);
+    if (nameMatch?.[1] && nameMatch[1].length < 40) next.name = nameMatch[1].trim();
+  }
+
+  // Location: "in San Antonio", "based in Texas", "San Antonio, Texas"
+  if (!next.location) {
+    const loc =
+      raw.match(/\b(?:in|from|based in|located in)\s+([A-Za-z .,]{2,60})$/i) ||
+      raw.match(/\b([A-Z][a-zA-Z .]+,\s*[A-Z]{2})\b/) ||
+      raw.match(/\b(San Antonio(?:[,\s]+Texas)?)\b/i);
+    if (loc?.[1]) next.location = loc[1].replace(/\s+/g, " ").trim();
+  }
+
+  if (!next.desiredOutcome) next.desiredOutcome = raw;
+  else if (!next.desiredOutcome.includes(raw)) next.desiredOutcome = `${next.desiredOutcome}\n${raw}`;
+
+  if (/llc|ein|formation|start(?:ing)? a business|from scratch/i.test(raw) && !next.services.includes("Business formation")) {
     next.services = [...next.services, "Business formation"];
   }
-  if (/shopify|amazon|tiktok|reseller/i.test(text) && !next.services.includes("Online reseller / marketplace")) {
+  if (/shopify|amazon|tiktok|reseller|store|e-?commerce|marketplace/i.test(raw) && !next.services.includes("Online reseller / marketplace")) {
     next.services = [...next.services, "Online reseller / marketplace"];
   }
-  if (/book|manuscript/i.test(text) && !next.services.includes("Book / publishing")) {
+  if (/automat|system|ops|agent|chatbot/i.test(raw) && !next.services.includes("AI / automation")) {
+    next.services = [...next.services, "AI / automation"];
+  }
+  // Only tag publishing when the user clearly wants a book — not when "from scratch" appears
+  if (/\b(book|manuscript|ghostwrit|publish(?:ing)? a book)\b/i.test(raw) && !next.services.includes("Book / publishing")) {
     next.services = [...next.services, "Book / publishing"];
   }
-  if (/logo|brand/i.test(text) && !next.services.includes("Brand identity")) {
+  if (/\b(logo|brand(?:ing)?|identity)\b/i.test(raw) && !next.services.includes("Brand identity")) {
     next.services = [...next.services, "Brand identity"];
+  }
+  if (/website|landing page|web design/i.test(raw) && !next.services.includes("Website")) {
+    next.services = [...next.services, "Website"];
+  }
+  if (/\$\s?\d|budget|afford|cheap|under \d/i.test(raw) && !next.budget) {
+    next.budget = raw.slice(0, 80);
   }
   return next;
 }
 
 function localReception(intake: IntakeRecord, text: string): string {
   const routing = classifyIntake(intake, text);
+  const outcome = (intake.desiredOutcome || text).toLowerCase();
+  const isCommerce =
+    /shopify|store|reseller|marketplace|amazon|tiktok|e-?commerce|sell/.test(outcome) ||
+    intake.services.some((s) => /reseller|marketplace|shopify/i.test(s));
+  const isFormation =
+    /formation|llc|ein|start a business|from scratch|business/.test(outcome) ||
+    intake.services.some((s) => /formation/i.test(s));
+
+  // Never re-ask fields we already have
   if (!intake.name) {
-    return "Understood. What’s your name, and where is this project based?";
+    return "Got it. What name should we put on this project, and which city are you working from?";
+  }
+  if (!intake.location) {
+    return `Thanks, ${intake.name.split(" ")[0]}. Which city or state is this project based in?`;
+  }
+  if (isCommerce && !intake.marketplace && !/shopify|amazon|tiktok/i.test(intake.desiredOutcome)) {
+    return `Thanks, ${intake.name.split(" ")[0]}. For the store, are you planning Shopify only, or also a marketplace like Amazon or TikTok Shop?`;
+  }
+  if (isCommerce && !intake.productCategory) {
+    return "What kind of products will you sell, and do you already have suppliers or inventory?";
+  }
+  if ((isFormation || isCommerce) && !intake.businessStatus) {
+    return "Where are you with the business so far — idea only, name chosen, or already filed anything?";
   }
   if (!intake.budget) {
-    return "Helpful. Do you have a budget range and a deadline in mind, even roughly?";
+    return "Do you have a rough budget range and a timeline in mind? Even a ballpark helps us match the right package.";
   }
-  return `${routing.summary} If that sounds right, I can file this as an inquiry so a specialist can send a scope summary${
-    routing.needsHumanReview ? " after human review" : ""
-  }.`;
+
+  // Route recommendation from catalog
+  let recommend = "";
+  if (isFormation && isCommerce) {
+    recommend =
+      "The closest fit is our Business Formation and Online-Reseller Readiness path (from $2,400) or the Online Reseller and Marketplace Launch package ($2,900). We can also start with the Business Setup Roadmap ($490) if you want a sequenced plan first.";
+  } else if (isCommerce) {
+    recommend =
+      "For a Shopify-first launch, Online Reseller and Marketplace Launch ($2,900) or Brand and Website Launch ($1,800) are the usual fits. Monthly support is $890/mo if you want us on ongoing ops.";
+  } else if (isFormation) {
+    recommend =
+      "For formation work, Formation and Administrative Coordination ($1,450) or the Business Setup Roadmap ($490) are the usual starting points.";
+  } else {
+    recommend = routing.summary;
+  }
+
+  return `Here is where I would route this: ${routing.summary}
+
+${recommend}
+
+If that matches what you want, check the terms on the right and tap Send to the studio so we can file an inquiry and prepare a scope. Or tell me what to adjust — product type, budget, timeline, or how hands-off you need the setup to be.`;
 }
