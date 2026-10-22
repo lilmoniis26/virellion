@@ -43,6 +43,17 @@ function HqHome() {
         PayPal, receipts, terms, and domain records stay with the operator.
       </p>
 
+      {operator ? (
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Button asChild>
+            <Link to="/hq/team">Invite a partner</Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link to="/hq/team">Manage partners</Link>
+          </Button>
+        </div>
+      ) : null}
+
       {operator && attention && !attention.paypalReady ? (
         <Card className="mt-8">
           <p className="font-display text-xl text-fg">Connect PayPal</p>

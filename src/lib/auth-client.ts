@@ -29,10 +29,6 @@ export const getSession = createServerFn({ method: 'GET' })(async () => {
 export const signUp = createServerFn({ method: 'POST' })(async (data: SignUpInput) => {
   try {
     const request = getWebRequest();
-    
-    // Check if this is the first user
-    // In production, you'd check the database
-    const isFirstUser = true; // TODO: Add logic to check if database is empty
 
     const response = await auth.api.signUpEmail({
       email: data.email,
@@ -42,17 +38,18 @@ export const signUp = createServerFn({ method: 'POST' })(async (data: SignUpInpu
       headers: request.headers,
     });
 
-    return { 
-      success: true, 
+    // Role (operator / partner / client) is assigned when the profile is created
+    // in ensureProfile — first account becomes operator, invited emails become
+    // partners, everyone else starts as client.
+    return {
+      success: true,
       user: response,
-      isAdmin: isFirstUser,
-      message: isFirstUser ? 'Welcome! You are now the admin with full control.' : 'Account created successfully.'
+      message: 'Account created successfully. Welcome to Virellion.',
     };
   } catch (error) {
-    return { 
-      success: false, 
+    return {
+      success: false,
       error: error instanceof Error ? error.message : 'Sign up failed',
-      isAdmin: false
     };
   }
 });
