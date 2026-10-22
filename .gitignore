@@ -1,5 +1,6 @@
-node_modules/
-.project_id
-.github_repo
 .env
 .env.*
+.github_repo
+.project_id
+.vercel/
+node_modules/
