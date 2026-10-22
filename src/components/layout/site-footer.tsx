@@ -101,6 +101,31 @@ export function SiteFooter() {
                 Privacy Notice
               </Link>
             </li>
+            <li>
+              <Link to="/cancellation" className="text-muted hover:text-fg">
+                Cancellation Policy
+              </Link>
+            </li>
+            <li>
+              <Link to="/refund" className="text-muted hover:text-fg">
+                Refund Policy
+              </Link>
+            </li>
+            <li>
+              <Link to="/payment-billing" className="text-muted hover:text-fg">
+                Payment & Billing
+              </Link>
+            </li>
+            <li>
+              <Link to="/accessibility" className="text-muted hover:text-fg">
+                Accessibility
+              </Link>
+            </li>
+            <li>
+              <Link to="/scope-limitations" className="text-muted hover:text-fg">
+                Scope & Limitations
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
