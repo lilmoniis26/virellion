@@ -10,10 +10,10 @@ import type {
 } from "./types";
 
 export const AGENCY = {
-	name: "Virellion",
-	wordmark: "VIRELLION",
-	host: "virellion.online",
-	url: "https://virellion.online",
+	name: "Virellion Apex",
+	wordmark: "VIRELLION APEX",
+	host: "virellionapex.com",
+	url: "https://virellionapex.com",
 	headline: "One team. Multiple specialties. Complete solutions.",
 	positioning: "We are a multidisciplinary creative, business, technology, publishing, media, and marketing agency. Our team helps individuals, authors, artists, entrepreneurs, creators, online sellers, and businesses turn ideas into finished brands, books, websites, products, businesses, campaigns, and digital experiences.",
 	opening: "We offer creative, publishing, business, technology, marketing, media, e-commerce, and administrative services. Tell me what you are trying to create, improve, launch, or accomplish, and I’ll help identify the right service or specialist."

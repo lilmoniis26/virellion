@@ -24,7 +24,7 @@ export const TERMS_SECTIONS: LegalSection[] = [
   {
     heading: "Who we are",
     paragraphs: [
-      "Virellion is a multidisciplinary creative, business, and technology studio operating at virellion.online. These Terms of Engagement govern every inquiry, order, package, and conversation you start through this site. By creating an account, submitting intake, or placing an order, you agree to them.",
+      "Virellion is a multidisciplinary creative, business, and technology studio operating at virellionapex.com. These Terms of Engagement govern every inquiry, order, package, and conversation you start through this site. By creating an account, submitting intake, or placing an order, you agree to them.",
       "Virellion provides administrative assistance, research, preparation, coordination, production, and referral support. We are not a law firm, CPA firm, bank, broker-dealer, immigration practice, or medical provider.",
     ],
   },
@@ -116,7 +116,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
   {
     heading: "Retention and your requests",
     paragraphs: [
-      "Engagement, payment, and receipt records are kept for as long as the studio needs them for operations, accounting, and disputes. You may ask to review, correct, or delete personal information that is not required to keep as a business record. Write through your account on virellion.online or the studio desk.",
+      "Engagement, payment, and receipt records are kept for as long as the studio needs them for operations, accounting, and disputes. You may ask to review, correct, or delete personal information that is not required to keep as a business record. Write through your account on virellionapex.com or the studio desk.",
       "If you are in California you may request access, deletion, and information about sharing. Virellion does not sell personal information.",
     ],
   },

@@ -1,6 +1,6 @@
 export const SITE = {
-  name: "Virellion",
-  wordmark: "VIRELLION",
-  host: "virellion.online",
-  url: "https://virellion.online",
+  name: "Virellion Apex",
+  wordmark: "VIRELLION APEX",
+  host: "virellionapex.com",
+  url: "https://virellionapex.com",
 } as const;

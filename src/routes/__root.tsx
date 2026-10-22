@@ -19,7 +19,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "One team. Multiple specialties. Complete solutions. A multidisciplinary creative, business, and technology studio at virellion.online.",
+          "One team. Multiple specialties. Complete solutions. A multidisciplinary creative, business, and technology studio at virellionapex.com.",
       },
       { name: "theme-color", content: "#080a09" },
     ],

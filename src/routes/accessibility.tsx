@@ -34,7 +34,7 @@ const SECTIONS = [
   {
     heading: "Feedback",
     paragraphs: [
-      "If you encounter an accessibility barrier on virellion.online or within a client account, please contact the studio desk with a description of the issue and the page or feature involved. We will review and respond within a reasonable time and prioritize fixes that improve access for all users.",
+      "If you encounter an accessibility barrier on virellionapex.com or within a client account, please contact the studio desk with a description of the issue and the page or feature involved. We will review and respond within a reasonable time and prioritize fixes that improve access for all users.",
     ],
   },
   {
